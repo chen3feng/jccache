@@ -106,9 +106,8 @@ def parse_command_line():
     if javac_pos < 0:
         options = parser.parse_args()
         return None, None, None
-    options = sys.argv[:javac_pos]
+    options = sys.argv[1:javac_pos]
     options = parser.parse_args(options)
-    print(options)
     javac = sys.argv[javac_pos]
     javac_args = sys.argv[javac_pos+1:]
     return options, javac, javac_args
@@ -135,7 +134,7 @@ def main():
         return
     cache = Cache(options)
     javac_options, classes_dir, sources = parse_java_command_line(javac_args)
-    if '-help' in javac_options or '-version' in javac_options:
+    if not sources or '-help' in javac_options or '-version' in javac_options:
         return subprocess.call([javac] + javac_options + sources)
     if sources and not classes_dir:
         print("-d is required for use jccache")
